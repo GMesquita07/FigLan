@@ -1,0 +1,14 @@
+.vscode/
+.idea/
+
+*.jar
+*.class
+*.log
+*.tmp
+
+src/figlan/generated/
+
+*.tokens
+*.interp
+
+.antlr/

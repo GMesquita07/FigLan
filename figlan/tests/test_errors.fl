@@ -1,0 +1,22 @@
+// Ficheiro de teste com erros semânticos
+
+integer n;
+real r;
+text t;
+
+// Erro 1: Variável 'x' não declarada
+println(x);
+
+// Erro 2: Variável 'n' já declarada neste escopo
+integer n;
+
+// Erro 3: Atribuição de tipo incompatível (text -> integer)
+n = "hello";
+
+// Erro 4: Operação inválida ('*' entre text e integer)
+t = "a" * 2;
+
+// Erro 5: Variável de ciclo 'for' deve ser inteira
+for r = 0 to 10 do
+    println(r);
+end
