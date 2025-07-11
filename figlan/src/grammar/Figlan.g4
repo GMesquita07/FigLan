@@ -2,10 +2,10 @@ grammar Figlan;
 
 /*───────────────────────── PARSER ─────────────────────────*/
 
-// —— topo
+// ——— topo
 program : statement* EOF ;
 
-// —— instruções
+// ——— instruções
 statement
     : varDecl   ';'
     | assignStmt ';'
@@ -17,46 +17,47 @@ statement
     | forStmt
     ;
 
-// —— declaração
+// ——— declaração
 varDecl : type varInit (',' varInit)* ;
 varInit : ID ('=' expression)? ;
 
-// —— atribuição
+// ——— atribuição
 assignStmt : ID ( '=' | '+=' ) expression ;
 
-// —— show / hide
+// ——— show / hide
 showStmt : 'show' exprList ;
 hideStmt : 'hide' ( 'all' | exprList ) ;
 
-// —— pausa
+// ——— pausa
 pauseStmt : 'pause' expression ;
 
-// —— print / println   (parênteses opcionais)
+// ——— print / println  (parênteses opcionais; separador vírgula OU espaço)
 printStmt
     : ('print' | 'println')
-      ( '(' printArgs ')'            // ex.: println("msg", n)
-      |   printArgs                  // ex.: println "msg", n
+      ( '(' printArgs ')'           // println("Total:", n)
+      |   printArgs                 // println "Total:" n
       )
     ;
-printArgs : expression (',' expression)* ;
+printArgs   : expression (argumentSep expression)* ;
+argumentSep : ',' |  ;              // vírgula ou nada (= espaço)
 
-// —— read  (três variantes)
+// ——— read  (3 variantes em instrução)
 readStmt
-    : ID '=' readExpr                // a = read "txt"
-    | 'read' '(' ID ')'              // read(a);
-    | 'read' ID                      // read a;
+    : ID '=' readExpr               // n = read "msg"
+    | 'read' '(' ID ')'             // read(n)
+    | 'read' ID                     // read n
     ;
-readExpr : 'read' STRING? ;
 
-// —— ciclo for
+// ——— ciclo for
 forStmt
     : 'for' (type? ID '=') expression 'to' expression 'do'
       statement* 'end'
     ;
 
-/*──────────── EXPRESSÕES ───────────*/
+/*──────────────────── EXPRESSÕES ───────────────────*/
 expression
     : newExpr                                # NewObj
+    | readExpr                               # ReadExpression   //  « read … » agora é parte da gramática de expressões
     | functionCall                           # FunCall
     | expression op=('*'|'/') expression     # MulDiv
     | expression op=('+'|'-') expression     # AddSub
@@ -69,48 +70,56 @@ expression
     | ID                                     # Id
     ;
 
+// new <identifier>  [ ( arg1, … ) ]
 newExpr
     : 'new' identifier ( '(' (expression (',' expression)*)? ')' )?
     ;
 
+// read  "texto"?   ou   read  expressão
+readExpr
+    : 'read' (expression)?                   // read            | read "msg" | read t+": "
+    ;
+
+// chamadas a funções/construtores
 functionCall
     : identifier '(' (expression (',' expression)*)? ')'
     ;
 
+// lista de expressões (show p,c  etc.)
 exprList : expression (',' expression)* ;
 
-/*────────── literais gráficos ─────────*/
+/*─────── literais gráficos ──────────*/
 pointLiteral  : '[' expression ',' expression ']' ;
 lineLiteral   : pointLiteral DASHDASH pointLiteral ;
 circleLiteral : pointLiteral PIPE expression ;
 
-/*────────── literais simples ──────────*/
+/*─────── literais simples ───────────*/
 literal : INT | REAL | STRING ;
 
-/*────────── tipos ─────────────────────*/
+/*─────── tipos ──────────────────────*/
 type
     : 'integer' | 'real' | 'text'
-    | 'point' | 'line' | 'circle'
+    | 'point'   | 'line' | 'circle'
     | 'figure'
     ;
 
-/*────────── identificador flexível ────*/
+/*─────── identificador flexível ─────*/
 identifier
     : ID
     | 'point' | 'line' | 'circle'
     | 'integer' | 'real' | 'text'
-    | 'read' | 'print' | 'println'   // se usados como funções
+    | 'read' | 'print' | 'println'
     ;
 
 /*───────────────────────── LEXER ─────────────────────────*/
 
-// símbolos literais
+// símbolos dos literais gráficos
 LBRACK   : '[' ;
 RBRACK   : ']' ;
 PIPE     : '|' ;
 DASHDASH : '--' ;
 
-// tokens base
+// tokens básicos
 ID     : [a-zA-Z_][a-zA-Z0-9_]* ;
 INT    : [0-9]+ ;
 REAL   : [0-9]+ '.' [0-9]+ ;
@@ -121,5 +130,5 @@ COMMENT_SLASH : '//' ~[\r\n]* -> skip ;
 COMMENT_HASH  : '#'  ~[\r\n]* -> skip ;
 COMMENT_BLOCK : '##' .*? '##' -> skip ;
 
-// espaço
+// espaço em branco
 WS : [ \t\r\n]+ -> skip ;

@@ -136,6 +136,18 @@ public class FiglanBaseListener implements FiglanListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterArgumentSep(FiglanParser.ArgumentSepContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArgumentSep(FiglanParser.ArgumentSepContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterReadStmt(FiglanParser.ReadStmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -143,18 +155,6 @@ public class FiglanBaseListener implements FiglanListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitReadStmt(FiglanParser.ReadStmtContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterReadExpr(FiglanParser.ReadExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitReadExpr(FiglanParser.ReadExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -191,6 +191,18 @@ public class FiglanBaseListener implements FiglanListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitModDiv(FiglanParser.ModDivContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterReadExpression(FiglanParser.ReadExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitReadExpression(FiglanParser.ReadExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -311,6 +323,18 @@ public class FiglanBaseListener implements FiglanListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitNewExpr(FiglanParser.NewExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterReadExpr(FiglanParser.ReadExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitReadExpr(FiglanParser.ReadExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

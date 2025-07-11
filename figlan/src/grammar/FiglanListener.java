@@ -107,6 +107,16 @@ public interface FiglanListener extends ParseTreeListener {
 	 */
 	void exitPrintArgs(FiglanParser.PrintArgsContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link FiglanParser#argumentSep}.
+	 * @param ctx the parse tree
+	 */
+	void enterArgumentSep(FiglanParser.ArgumentSepContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link FiglanParser#argumentSep}.
+	 * @param ctx the parse tree
+	 */
+	void exitArgumentSep(FiglanParser.ArgumentSepContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link FiglanParser#readStmt}.
 	 * @param ctx the parse tree
 	 */
@@ -116,16 +126,6 @@ public interface FiglanListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitReadStmt(FiglanParser.ReadStmtContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link FiglanParser#readExpr}.
-	 * @param ctx the parse tree
-	 */
-	void enterReadExpr(FiglanParser.ReadExprContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link FiglanParser#readExpr}.
-	 * @param ctx the parse tree
-	 */
-	void exitReadExpr(FiglanParser.ReadExprContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link FiglanParser#forStmt}.
 	 * @param ctx the parse tree
@@ -160,6 +160,18 @@ public interface FiglanListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitModDiv(FiglanParser.ModDivContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ReadExpression}
+	 * labeled alternative in {@link FiglanParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterReadExpression(FiglanParser.ReadExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ReadExpression}
+	 * labeled alternative in {@link FiglanParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitReadExpression(FiglanParser.ReadExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code FunCall}
 	 * labeled alternative in {@link FiglanParser#expression}.
@@ -278,6 +290,16 @@ public interface FiglanListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitNewExpr(FiglanParser.NewExprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link FiglanParser#readExpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterReadExpr(FiglanParser.ReadExprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link FiglanParser#readExpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitReadExpr(FiglanParser.ReadExprContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link FiglanParser#functionCall}.
 	 * @param ctx the parse tree
