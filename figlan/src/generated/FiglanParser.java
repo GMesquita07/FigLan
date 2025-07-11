@@ -1,4 +1,4 @@
-// Generated from src/grammar/Figlan.g4 by ANTLR 4.13.2
+// Generated from Figlan.g4 by ANTLR 4.13.2
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -124,6 +124,11 @@ public class FiglanParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitProgram(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FiglanVisitor ) return ((FiglanVisitor<? extends T>)visitor).visitProgram(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ProgramContext program() throws RecognitionException {
@@ -199,6 +204,11 @@ public class FiglanParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FiglanVisitor ) return ((FiglanVisitor<? extends T>)visitor).visitStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -313,6 +323,11 @@ public class FiglanParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitVarDecl(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FiglanVisitor ) return ((FiglanVisitor<? extends T>)visitor).visitVarDecl(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final VarDeclContext varDecl() throws RecognitionException {
@@ -376,6 +391,11 @@ public class FiglanParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitAssignment(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FiglanVisitor ) return ((FiglanVisitor<? extends T>)visitor).visitAssignment(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final AssignmentContext assignment() throws RecognitionException {
@@ -437,6 +457,11 @@ public class FiglanParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitDrawStmt(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FiglanVisitor ) return ((FiglanVisitor<? extends T>)visitor).visitDrawStmt(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final DrawStmtContext drawStmt() throws RecognitionException {
@@ -480,6 +505,11 @@ public class FiglanParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitEraseStmt(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FiglanVisitor ) return ((FiglanVisitor<? extends T>)visitor).visitEraseStmt(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -527,6 +557,11 @@ public class FiglanParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitPauseStmt(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FiglanVisitor ) return ((FiglanVisitor<? extends T>)visitor).visitPauseStmt(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final PauseStmtContext pauseStmt() throws RecognitionException {
@@ -572,6 +607,11 @@ public class FiglanParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitPrintStmt(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FiglanVisitor ) return ((FiglanVisitor<? extends T>)visitor).visitPrintStmt(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -625,6 +665,11 @@ public class FiglanParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitReadStmt(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FiglanVisitor ) return ((FiglanVisitor<? extends T>)visitor).visitReadStmt(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -681,6 +726,11 @@ public class FiglanParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitLoopStmt(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FiglanVisitor ) return ((FiglanVisitor<? extends T>)visitor).visitLoopStmt(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final LoopStmtContext loopStmt() throws RecognitionException {
@@ -735,6 +785,11 @@ public class FiglanParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitBlock(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FiglanVisitor ) return ((FiglanVisitor<? extends T>)visitor).visitBlock(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -802,6 +857,11 @@ public class FiglanParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitFunctionExpr(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FiglanVisitor ) return ((FiglanVisitor<? extends T>)visitor).visitFunctionExpr(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class MulDivExprContext extends ExpressionContext {
@@ -821,6 +881,11 @@ public class FiglanParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitMulDivExpr(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FiglanVisitor ) return ((FiglanVisitor<? extends T>)visitor).visitMulDivExpr(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class IdExprContext extends ExpressionContext {
@@ -833,6 +898,11 @@ public class FiglanParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitIdExpr(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FiglanVisitor ) return ((FiglanVisitor<? extends T>)visitor).visitIdExpr(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -849,6 +919,11 @@ public class FiglanParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitParensExpr(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FiglanVisitor ) return ((FiglanVisitor<? extends T>)visitor).visitParensExpr(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralExprContext extends ExpressionContext {
@@ -863,6 +938,11 @@ public class FiglanParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitLiteralExpr(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FiglanVisitor ) return ((FiglanVisitor<? extends T>)visitor).visitLiteralExpr(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -883,6 +963,11 @@ public class FiglanParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitModDivExpr(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FiglanVisitor ) return ((FiglanVisitor<? extends T>)visitor).visitModDivExpr(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class AddSubExprContext extends ExpressionContext {
@@ -901,6 +986,11 @@ public class FiglanParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitAddSubExpr(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FiglanVisitor ) return ((FiglanVisitor<? extends T>)visitor).visitAddSubExpr(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1081,6 +1171,11 @@ public class FiglanParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitFunctionCall(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FiglanVisitor ) return ((FiglanVisitor<? extends T>)visitor).visitFunctionCall(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final FunctionCallContext functionCall() throws RecognitionException {
@@ -1152,6 +1247,11 @@ public class FiglanParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitLiteral(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FiglanVisitor ) return ((FiglanVisitor<? extends T>)visitor).visitLiteral(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final LiteralContext literal() throws RecognitionException {
@@ -1197,6 +1297,11 @@ public class FiglanParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitType(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof FiglanVisitor ) return ((FiglanVisitor<? extends T>)visitor).visitType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
