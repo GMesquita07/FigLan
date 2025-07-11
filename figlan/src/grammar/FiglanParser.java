@@ -1,4 +1,4 @@
-// Generated from /home/mesquita/COMPILADORES_2/FigLan/figlan/src/grammar/Figlan.g4 by ANTLR 4.13.1
+// Generated from Figlan.g4 by ANTLR 4.13.2
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
 
-@SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue"})
+@SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue", "this-escape"})
 public class FiglanParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.13.1", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.13.2", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -122,6 +122,14 @@ public class FiglanParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_program; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterProgram(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitProgram(this);
+		}
 	}
 
 	public final ProgramContext program() throws RecognitionException {
@@ -190,6 +198,14 @@ public class FiglanParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_statement; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterStatement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitStatement(this);
+		}
 	}
 
 	public final StatementContext statement() throws RecognitionException {
@@ -297,6 +313,14 @@ public class FiglanParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_varDecl; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterVarDecl(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitVarDecl(this);
+		}
 	}
 
 	public final VarDeclContext varDecl() throws RecognitionException {
@@ -349,6 +373,14 @@ public class FiglanParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_varInit; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterVarInit(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitVarInit(this);
+		}
 	}
 
 	public final VarInitContext varInit() throws RecognitionException {
@@ -395,6 +427,14 @@ public class FiglanParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_assignStmt; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterAssignStmt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitAssignStmt(this);
+		}
 	}
 
 	public final AssignStmtContext assignStmt() throws RecognitionException {
@@ -440,6 +480,14 @@ public class FiglanParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_showStmt; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterShowStmt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitShowStmt(this);
+		}
 	}
 
 	public final ShowStmtContext showStmt() throws RecognitionException {
@@ -474,6 +522,14 @@ public class FiglanParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_hideStmt; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterHideStmt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitHideStmt(this);
+		}
 	}
 
 	public final HideStmtContext hideStmt() throws RecognitionException {
@@ -530,6 +586,14 @@ public class FiglanParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_pauseStmt; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterPauseStmt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitPauseStmt(this);
+		}
 	}
 
 	public final PauseStmtContext pauseStmt() throws RecognitionException {
@@ -564,6 +628,14 @@ public class FiglanParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_printStmt; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterPrintStmt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitPrintStmt(this);
+		}
 	}
 
 	public final PrintStmtContext printStmt() throws RecognitionException {
@@ -610,6 +682,14 @@ public class FiglanParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_printArgs; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterPrintArgs(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitPrintArgs(this);
+		}
 	}
 
 	public final PrintArgsContext printArgs() throws RecognitionException {
@@ -660,6 +740,14 @@ public class FiglanParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_readStmt; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterReadStmt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitReadStmt(this);
+		}
 	}
 
 	public final ReadStmtContext readStmt() throws RecognitionException {
@@ -694,6 +782,14 @@ public class FiglanParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_readExpr; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterReadExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitReadExpr(this);
+		}
 	}
 
 	public final ReadExprContext readExpr() throws RecognitionException {
@@ -750,6 +846,14 @@ public class FiglanParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_forStmt; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterForStmt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitForStmt(this);
+		}
 	}
 
 	public final ForStmtContext forStmt() throws RecognitionException {
@@ -832,6 +936,14 @@ public class FiglanParser extends Parser {
 			return getRuleContext(LineLiteralContext.class,0);
 		}
 		public LineLitContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterLineLit(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitLineLit(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ModDivContext extends ExpressionContext {
@@ -843,6 +955,14 @@ public class FiglanParser extends Parser {
 			return getRuleContext(ExpressionContext.class,i);
 		}
 		public ModDivContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterModDiv(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitModDiv(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class FunCallContext extends ExpressionContext {
@@ -850,6 +970,14 @@ public class FiglanParser extends Parser {
 			return getRuleContext(FunctionCallContext.class,0);
 		}
 		public FunCallContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterFunCall(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitFunCall(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class PointLitContext extends ExpressionContext {
@@ -857,6 +985,14 @@ public class FiglanParser extends Parser {
 			return getRuleContext(PointLiteralContext.class,0);
 		}
 		public PointLitContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterPointLit(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitPointLit(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class MulDivContext extends ExpressionContext {
@@ -868,6 +1004,14 @@ public class FiglanParser extends Parser {
 			return getRuleContext(ExpressionContext.class,i);
 		}
 		public MulDivContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterMulDiv(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitMulDiv(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class AddSubContext extends ExpressionContext {
@@ -879,6 +1023,14 @@ public class FiglanParser extends Parser {
 			return getRuleContext(ExpressionContext.class,i);
 		}
 		public AddSubContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterAddSub(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitAddSub(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ParensContext extends ExpressionContext {
@@ -886,6 +1038,14 @@ public class FiglanParser extends Parser {
 			return getRuleContext(ExpressionContext.class,0);
 		}
 		public ParensContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterParens(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitParens(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralExprContext extends ExpressionContext {
@@ -893,11 +1053,27 @@ public class FiglanParser extends Parser {
 			return getRuleContext(LiteralContext.class,0);
 		}
 		public LiteralExprContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterLiteralExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitLiteralExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class IdContext extends ExpressionContext {
 		public TerminalNode ID() { return getToken(FiglanParser.ID, 0); }
 		public IdContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterId(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitId(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class CircleLitContext extends ExpressionContext {
@@ -905,6 +1081,14 @@ public class FiglanParser extends Parser {
 			return getRuleContext(CircleLiteralContext.class,0);
 		}
 		public CircleLitContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterCircleLit(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitCircleLit(this);
+		}
 	}
 
 	public final ExpressionContext expression() throws RecognitionException {
@@ -1102,6 +1286,14 @@ public class FiglanParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_exprList; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterExprList(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitExprList(this);
+		}
 	}
 
 	public final ExprListContext exprList() throws RecognitionException {
@@ -1155,6 +1347,14 @@ public class FiglanParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_functionCall; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterFunctionCall(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitFunctionCall(this);
+		}
 	}
 
 	public final FunctionCallContext functionCall() throws RecognitionException {
@@ -1231,6 +1431,14 @@ public class FiglanParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_pointLiteral; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterPointLiteral(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitPointLiteral(this);
+		}
 	}
 
 	public final PointLiteralContext pointLiteral() throws RecognitionException {
@@ -1274,6 +1482,14 @@ public class FiglanParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_lineLiteral; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterLineLiteral(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitLineLiteral(this);
+		}
 	}
 
 	public final LineLiteralContext lineLiteral() throws RecognitionException {
@@ -1313,6 +1529,14 @@ public class FiglanParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_circleLiteral; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterCircleLiteral(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitCircleLiteral(this);
+		}
 	}
 
 	public final CircleLiteralContext circleLiteral() throws RecognitionException {
@@ -1349,6 +1573,14 @@ public class FiglanParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_literal; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterLiteral(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitLiteral(this);
+		}
 	}
 
 	public final LiteralContext literal() throws RecognitionException {
@@ -1387,6 +1619,14 @@ public class FiglanParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_type; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).enterType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof FiglanListener ) ((FiglanListener)listener).exitType(this);
+		}
 	}
 
 	public final TypeContext type() throws RecognitionException {

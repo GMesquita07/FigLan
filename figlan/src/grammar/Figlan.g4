@@ -1,62 +1,86 @@
 grammar Figlan;
 
-program         : (statement)* EOF ;
+//—  REGRAS DE ALTO NÍVEL  ——————————————————————————
+program      : statement* EOF ;
 
 statement
     : varDecl ';'
-    | assignment ';'
-    | drawStmt ';'
-    | eraseStmt ';'
+    | assignStmt ';'
+    | showStmt ';'
+    | hideStmt ';'
     | pauseStmt ';'
     | printStmt ';'
     | readStmt ';'
-    | loopStmt
+    | forStmt
     ;
 
-varDecl         : type ID (',' ID)* ;
+// declaração de variáveis (opcionalmente inicializadas)
+varDecl      : type varInit (',' varInit)* ;
+varInit      : ID ('=' expression)? ;
 
-assignment
-    : ID '=' expression
-    | ID '=' 'new' type ;
+// atribuição (=) ou acumulação (+=)
+assignStmt   : ID ( '=' | '+=' ) expression ;
 
-drawStmt        : 'draw' '(' ID ')' ;
+// mostrar / ocultar
+showStmt     : 'show' exprList ;
+hideStmt     : 'hide' ( 'all' | exprList ) ;
 
-eraseStmt       : 'erase' '(' ID ')' ;
+// pausa em ms
+pauseStmt    : 'pause' expression ;
 
-pauseStmt       : 'pause' '(' expression ')' ;
+// print / println sem parênteses
+printStmt    : ('print' | 'println') printArgs ;
+printArgs    : expression (',' expression)* ;
 
-printStmt       : ('print' | 'println') '(' expression ')' ;
+// leitura para variável:  id = read "texto"
+readStmt     : ID '=' readExpr ;
+readExpr     : 'read' STRING? ;
 
-readStmt        : ID '=' 'read' '(' ')' ;
+// ciclo  for  …  to  …  do  … end
+forStmt      : 'for' (type? ID '=') expression 'to' expression 'do'
+               statement* 'end' ;
 
-loopStmt        : 'loop' ID 'in' expression '..' expression block ;
-
-block           : '{' (statement)* '}' ;
-
+//—  EXPRESSÕES  ————————————————————————————————
 expression
-    : expression op=('*'|'/') expression      # MulDivExpr
-    | expression op=('+'|'-') expression      # AddSubExpr
-    | expression op=('%'|'//') expression     # ModDivExpr
-    | '(' expression ')'                      # ParensExpr
-    | functionCall                            # FunctionExpr
+    : expression op=('*'|'/') expression      # MulDiv
+    | expression op=('+'|'-') expression      # AddSub
+    | expression op=('%'|'//') expression     # ModDiv
+    | pointLiteral                            # PointLit
+    | lineLiteral                             # LineLit
+    | circleLiteral                           # CircleLit
+    | functionCall                            # FunCall
+    | '(' expression ')'                      # Parens
     | literal                                 # LiteralExpr
-    | ID                                      # IdExpr
+    | ID                                      # Id
     ;
 
-functionCall    : ID '(' (expression (',' expression)*)? ')' ;
+exprList     : expression (',' expression)* ;
 
-literal
-    : INT
-    | REAL
-    | STRING
-    ;
+// chamadas genéricas (text(10), integer(t), new circle(...))
+functionCall : ('new')? ID '(' (expression (',' expression)*)? ')' ;
 
-type            : 'integer' | 'real' | 'text' | 'point' | 'line' | 'circle' ;
+// literais gráficos
+pointLiteral   : '[' expression ',' expression ']' ;
+lineLiteral    : pointLiteral '--' pointLiteral ;
+circleLiteral  : pointLiteral '|' expression ;
 
-ID              : [a-zA-Z_][a-zA-Z0-9_]* ;
-INT             : [0-9]+ ;
-REAL            : [0-9]+ '.' [0-9]+ ;
-STRING          : '"' (~["\\] | '\\' .)* '"' ;
+//—  LITERAIS  ————————————————————————————————
+literal      : INT | REAL | STRING ;
 
-COMMENT         : '//' ~[\r\n]* -> skip ;
-WS              : [ \t\r\n]+ -> skip ;
+//—  TIPOS  ————————————————————————————————
+type         : 'integer' | 'real' | 'text'
+             | 'point' | 'line' | 'circle' | 'figure' ;
+
+//—  LEXER  ————————————————————————————————
+ID           : [a-zA-Z_][a-zA-Z0-9_]* ;
+INT          : [0-9]+ ;
+REAL         : [0-9]+ '.' [0-9]+ ;
+STRING       : '"' ( ~["\\] | '\\' . )* '"' ;
+
+// comentários
+COMMENT_SLASH : '//' ~[\r\n]*            -> skip ;
+COMMENT_HASH  : '#'  ~[\r\n]*            -> skip ;
+COMMENT_BLOCK : '##' .*? '##'            -> skip ;
+
+// espaço em branco
+WS           : [ \t\r\n]+                -> skip ;
