@@ -2,133 +2,132 @@ grammar Figlan;
 
 /*───────────────────────── PARSER ─────────────────────────*/
 
-// ——— topo
+// ——— Topo
 program : statement* EOF ;
 
-// ——— instruções
+// ——— Instruções
+// NOTA: 'readStmt' foi removido. A atribuição 'var = read ...' é tratada por 'assignStmt'.
 statement
-    : varDecl   ';'
-    | assignStmt ';'
-    | showStmt  ';'
-    | hideStmt  ';'
-    | pauseStmt ';'
-    | printStmt ';'
-    | readStmt  ';'
+    : ( varDecl
+      | assignStmt
+      | showStmt
+      | hideStmt
+      | pauseStmt
+      | printStmt
+      ) ';'
     | forStmt
     ;
 
-// ——— declaração
+// ——— Declaração
 varDecl : type varInit (',' varInit)* ;
 varInit : ID ('=' expression)? ;
 
-// ——— atribuição
-assignStmt : ID ( '=' | '+=' ) expression ;
+// ——— Atribuição (cobre 'a = 10', 'a += 1', e 'a = read "..."')
+assignStmt : ID (op=('=' | '+=') ) expression ;
 
-// ——— show / hide
-showStmt : 'show' exprList ;
-hideStmt : 'hide' ( 'all' | exprList ) ;
+// ——— show / hide: para desenhar ou esconder figuras [cite: 9, 15, 16]
+showStmt : SHOW exprList ;
+hideStmt : HIDE ( ALL | exprList ) ;
 
-// ——— pausa
-pauseStmt : 'pause' expression ;
+// ——— Pausa
+pauseStmt : PAUSE expression ;
 
-// ——— print / println  (parênteses opcionais; separador vírgula OU espaço)
-printStmt
-    : ('print' | 'println')
-      ( '(' printArgs ')'           // println("Total:", n)
-      |   printArgs                 // println "Total:" n
-      )
-    ;
-printArgs   : expression (argumentSep expression)* ;
-argumentSep : ',' |  ;              // vírgula ou nada (= espaço)
+// ——— print / println: para escrita no standard output [cite: 12]
+printStmt : (PRINT | PRINTLN) ( '(' printArgs ')' | printArgs ) ;
+printArgs   : expression (','? expression)* ; // A vírgula é opcional entre argumentos
 
-// ——— read  (3 variantes em instrução)
-readStmt
-    : ID '=' readExpr               // n = read "msg"
-    | 'read' '(' ID ')'             // read(n)
-    | 'read' ID                     // read n
-    ;
-
-// ——— ciclo for
+// ——— Ciclo for: para iteração num intervalo de inteiros [cite: 17]
 forStmt
-    : 'for' (type? ID '=') expression 'to' expression 'do'
-      statement* 'end'
+    : FOR (type? ID '=') expression TO expression DO
+      statement*
+      END
     ;
 
 /*──────────────────── EXPRESSÕES ───────────────────*/
+
 expression
-    : newExpr                                # NewObj
-    | readExpr                               # ReadExpression   //  « read … » agora é parte da gramática de expressões
-    | functionCall                           # FunCall
-    | expression op=('*'|'/') expression     # MulDiv
-    | expression op=('+'|'-') expression     # AddSub
-    | expression op=('%'|'//') expression    # ModDiv
-    | pointLiteral                           # PointLit
-    | lineLiteral                            # LineLit
-    | circleLiteral                          # CircleLit
-    | '(' expression ')'                     # Parens
-    | literal                                # LiteralExpr
-    | ID                                     # Id
+    : type '(' expression ')'                  # TypeConversion // Converte tipos, ex: integer("10") 
+    | newExpr                                  # NewObj         // Cria novos objetos, ex: new point() 
+    | readExpr                                 # ReadExpression // Lê do input, ex: read "prompt" 
+    | expression op=('*'|'/'|'%'|'//') expression  # MulDivMod      // Operadores com mesma precedência [cite: 10]
+    | expression op=('+'|'-') expression       # AddSub         // Add/Sub e concatenação de texto [cite: 11]
+    | pointLiteral                             # PointLit
+    | lineLiteral                              # LineLit
+    | circleLiteral                            # CircleLit
+    | '(' expression ')'                       # Parens
+    | literal                                  # LiteralExpr
+    | ID                                       # Id
     ;
 
-// new <identifier>  [ ( arg1, … ) ]
-newExpr
-    : 'new' identifier ( '(' (expression (',' expression)*)? ')' )?
-    ;
+// ——— Criação de Objetos
+// NOTA: Alterado de 'identifier' para 'type', pois só se podem criar instâncias de tipos.
+newExpr: NEW type ('(' (expression (',' expression)*)? ')')? ;
 
-// read  "texto"?   ou   read  expressão
-readExpr
-    : 'read' (expression)?                   // read            | read "msg" | read t+": "
-    ;
+// ——— Leitura
+readExpr: READ expression? ;
 
-// chamadas a funções/construtores
-functionCall
-    : identifier '(' (expression (',' expression)*)? ')'
-    ;
-
-// lista de expressões (show p,c  etc.)
+// ——— Lista de Expressões (usada por 'show' e 'hide')
 exprList : expression (',' expression)* ;
 
-/*─────── literais gráficos ──────────*/
-pointLiteral  : '[' expression ',' expression ']' ;
+/*─────── Literais Gráficos ──────────*/
+pointLiteral  : LBRACK expression ',' expression RBRACK ;
 lineLiteral   : pointLiteral DASHDASH pointLiteral ;
 circleLiteral : pointLiteral PIPE expression ;
 
-/*─────── literais simples ───────────*/
+/*─────── Literais Simples ───────────*/
 literal : INT | REAL | STRING ;
 
-/*─────── tipos ──────────────────────*/
+/*─────── Tipos ──────────────────────*/
+// NOTA: Usa os tokens do Lexer em vez de literais de string.
 type
-    : 'integer' | 'real' | 'text'
-    | 'point'   | 'line' | 'circle'
-    | 'figure'
+    : INTEGER_KW | REAL_KW | TEXT_KW
+    | POINT_KW   | LINE_KW | CIRCLE_KW
+    | FIGURE_KW
     ;
 
-/*─────── identificador flexível ─────*/
-identifier
-    : ID
-    | 'point' | 'line' | 'circle'
-    | 'integer' | 'real' | 'text'
-    | 'read' | 'print' | 'println'
-    ;
 
 /*───────────────────────── LEXER ─────────────────────────*/
 
-// símbolos dos literais gráficos
-LBRACK   : '[' ;
-RBRACK   : ']' ;
-PIPE     : '|' ;
-DASHDASH : '--' ;
+// ——— Palavras-chave (todas definidas explicitamente)
+FOR     : 'for' ;
+TO      : 'to' ;
+DO      : 'do' ;
+END     : 'end' ;
+NEW     : 'new' ;
+SHOW    : 'show' ;
+HIDE    : 'hide' ;
+ALL     : 'all' ;
+PAUSE   : 'pause' ;
+PRINT   : 'print' ;
+PRINTLN : 'println' ;
+READ    : 'read' ;
 
-// tokens básicos
-ID     : [a-zA-Z_][a-zA-Z0-9_]* ;
-INT    : [0-9]+ ;
-REAL   : [0-9]+ '.' [0-9]+ ;
-STRING : '"' ( ~["\\] | '\\' . )* '"' ;
+// Palavras-chave de Tipos [cite: 4, 6]
+INTEGER_KW : 'integer' ;
+REAL_KW    : 'real' ;
+TEXT_KW    : 'text' ;
+POINT_KW   : 'point' ;
+LINE_KW    : 'line' ;
+CIRCLE_KW  : 'circle' ;
+FIGURE_KW  : 'figure' ;
 
-// comentários
+// ——— Símbolos
+LBRACK    : '[' ;
+RBRACK    : ']' ;
+PIPE      : '|' ;
+DASHDASH  : '--' ;
+
+// ——— Tokens de Base
+// NOTA: A regra ID vem DEPOIS de todas as palavras-chave.
+ID      : [a-zA-Z_][a-zA-Z0-9_]* ;
+INT     : [0-9]+ ;
+REAL    : [0-9]+ '.' [0-9]+ ;
+STRING  : '"' ( ~["\\] | '\\' . )* '"' ;
+
+// ——— Comentários (a serem ignorados)
 COMMENT_SLASH : '//' ~[\r\n]* -> skip ;
 COMMENT_HASH  : '#'  ~[\r\n]* -> skip ;
 COMMENT_BLOCK : '##' .*? '##' -> skip ;
 
-// espaço em branco
+// ——— Espaço em Branco (a ser ignorado)
 WS : [ \t\r\n]+ -> skip ;
