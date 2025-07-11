@@ -221,6 +221,18 @@ public interface FiglanListener extends ParseTreeListener {
 	 */
 	void exitParens(FiglanParser.ParensContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code NewObj}
+	 * labeled alternative in {@link FiglanParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterNewObj(FiglanParser.NewObjContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code NewObj}
+	 * labeled alternative in {@link FiglanParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitNewObj(FiglanParser.NewObjContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code LiteralExpr}
 	 * labeled alternative in {@link FiglanParser#expression}.
 	 * @param ctx the parse tree
@@ -257,15 +269,15 @@ public interface FiglanListener extends ParseTreeListener {
 	 */
 	void exitCircleLit(FiglanParser.CircleLitContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link FiglanParser#exprList}.
+	 * Enter a parse tree produced by {@link FiglanParser#newExpr}.
 	 * @param ctx the parse tree
 	 */
-	void enterExprList(FiglanParser.ExprListContext ctx);
+	void enterNewExpr(FiglanParser.NewExprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link FiglanParser#exprList}.
+	 * Exit a parse tree produced by {@link FiglanParser#newExpr}.
 	 * @param ctx the parse tree
 	 */
-	void exitExprList(FiglanParser.ExprListContext ctx);
+	void exitNewExpr(FiglanParser.NewExprContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link FiglanParser#functionCall}.
 	 * @param ctx the parse tree
@@ -276,6 +288,16 @@ public interface FiglanListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFunctionCall(FiglanParser.FunctionCallContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link FiglanParser#exprList}.
+	 * @param ctx the parse tree
+	 */
+	void enterExprList(FiglanParser.ExprListContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link FiglanParser#exprList}.
+	 * @param ctx the parse tree
+	 */
+	void exitExprList(FiglanParser.ExprListContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link FiglanParser#pointLiteral}.
 	 * @param ctx the parse tree
@@ -326,4 +348,14 @@ public interface FiglanListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitType(FiglanParser.TypeContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link FiglanParser#identifier}.
+	 * @param ctx the parse tree
+	 */
+	void enterIdentifier(FiglanParser.IdentifierContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link FiglanParser#identifier}.
+	 * @param ctx the parse tree
+	 */
+	void exitIdentifier(FiglanParser.IdentifierContext ctx);
 }

@@ -256,6 +256,18 @@ public class FiglanBaseListener implements FiglanListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterNewObj(FiglanParser.NewObjContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNewObj(FiglanParser.NewObjContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterLiteralExpr(FiglanParser.LiteralExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -292,13 +304,13 @@ public class FiglanBaseListener implements FiglanListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExprList(FiglanParser.ExprListContext ctx) { }
+	@Override public void enterNewExpr(FiglanParser.NewExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExprList(FiglanParser.ExprListContext ctx) { }
+	@Override public void exitNewExpr(FiglanParser.NewExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -311,6 +323,18 @@ public class FiglanBaseListener implements FiglanListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitFunctionCall(FiglanParser.FunctionCallContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExprList(FiglanParser.ExprListContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExprList(FiglanParser.ExprListContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -371,6 +395,18 @@ public class FiglanBaseListener implements FiglanListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitType(FiglanParser.TypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIdentifier(FiglanParser.IdentifierContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIdentifier(FiglanParser.IdentifierContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
