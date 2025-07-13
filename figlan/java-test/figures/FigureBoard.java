@@ -144,6 +144,40 @@ public class FigureBoard extends JComponent
       }
    }
 
+   public void eraseAll()
+   {
+      Runnable runEraseAll = new Runnable()
+      {
+         public void run()
+         {
+            // 1. Remove todas as figuras da lista interna.
+            figures.clear();
+            
+            // 2. Repinta todo o componente. Como a lista de figuras
+            // está vazia, isto irá efetivamente limpar a tela.
+            repaint();
+         }
+      };
+
+      // Garante que a operação é executada na thread de eventos da GUI
+      if(!javax.swing.SwingUtilities.isEventDispatchThread())
+      {
+         try
+         {
+            javax.swing.SwingUtilities.invokeAndWait(runEraseAll);
+         }
+         catch(Exception e)
+         {
+            err.println("ERROR: unable to erase all figures!");
+            exit(1);
+         }
+      }
+      else
+      {
+         runEraseAll.run();
+      }
+   }
+
    protected boolean intersect(Figure f1, Figure f2)
    {
       int f1x = f1.boundingBox.x;

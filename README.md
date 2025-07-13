@@ -1,49 +1,98 @@
-# FigLan
-Repositório do trabalho em recurso de Compiladores
+# Compilador FigLan
 
+Este repositório contém o código-fonte de um compilador para a linguagem FigLan, desenvolvida no âmbito da unidade curricular de Compiladores.
 
-Plano de Trabalho por Etapas
+O compilador traduz código-fonte Figlan (`.fl`) para código Java executável que utiliza uma biblioteca gráfica para desenhar figuras geométricas.
 
-🧩 Fase 1 — Análise da Gramática e Parser
+## Estrutura de Pastas
 
-Especificar a gramática da linguagem FigLan em ANTLR (tipos, instruções, expressões, etc.)
+* `figlan/examples/`: Contém ficheiros de exemplo com código-fonte Figlan.
+* `figlan/java-test/`: Contém a biblioteca de runtime Java para a GUI e as classes base das figuras.
+* `figlan/lib/`: Contém as dependências `.jar` (ANTLR e StringTemplate).
+* `figlan/src/figlan/`: Contém o código-fonte do seu compilador, seguindo a convenção de pacotes Java.
+    * `compiler/`: O código do compilador (`Main`, `CodeGenerator`, etc.). O pacote é `figlan.compiler`.
+    * `grammar/`: O ficheiro da gramática ANTLR (`.g4`).
+    * `generated/`: **(Pasta Gerada)** Onde o ANTLR colocará o Parser e o Lexer. O pacote será `figlan.generated`.
+* `figlan/bin/`: **(Pasta Gerada)** Onde o `javac` colocará todos os ficheiros `.class` compilados.
 
-    Gerar o parser e visitor base
+---
 
-🧠 Fase 2 — Análise Semântica
+## Instruções de Compilação e Execução
 
-Implementar análise de tipos (com verificação de declarações, atribuições, compatibilidades)
+Todos os comandos devem ser executados a partir da pasta raiz do repositório (`FigLan/`).
 
-    Suporte para escopos e ambiente de símbolos
+### Passo 0: Pré-requisitos
 
-🛠️ Fase 3 — Geração de Código com StringTemplate
+Certifique-se de que tem o Java JDK instalado. Antes de compilar pela primeira vez, crie a pasta `bin`:
 
-Definir templates base (e.g., para variáveis, expressões, comandos)
+```bash
+mkdir figlan/bin
+```
 
-    Traduzir as construções da linguagem para chamadas Java (board.draw(...), etc.)
+### Passo 1: Gerar o Parser a partir da Gramática
 
-🎨 Fase 4 — Integração com Código Java Gráfico
+Este comando invoca a ferramenta ANTLR para gerar os ficheiros Java do parser, lexer e visitor a partir da gramática `Figlan.g4`.
 
-Garantir que o código gerado usa as classes Figure, FigureBoard, etc.
+```bash
+java -jar figlan/lib/antlr-4.13.1-complete.jar -o figlan/src/figlan/generated -package figlan.generated -visitor -no-listener figlan/src/figlan/grammar/Figlan.g4
+```
 
-    Gerar main() com ciclo de execução compatível
+**Explicação dos parâmetros:**
+* `-o figlan/src/figlan/generated`: Define o diretório de saída correto.
+* `-package figlan.generated`: Especifica o nome completo do pacote para os ficheiros gerados.
+* `-visitor`: Gera as classes base para o padrão de projeto Visitor.
+* `-no-listener`: Opcional, para não gerar as classes do padrão Listener.
 
-🧪 Fase 5 — Testes e Validação
+### Passo 2: Compilar Todo o Código-Fonte Java
 
-Validar os exemplos fornecidos (example1.fl, etc.)
+Compilamos o nosso código do compilador, a biblioteca de figuras e os ficheiros gerados pelo ANTLR.
 
-Testar casos limite e erro semântico
+```bash
+# Para Linux/macOS
+javac -d figlan/bin -cp "figlan/lib/antlr-4.13.1-complete.jar:figlan/lib/ST-4.3.4.jar" $(find figlan/src -name "*.java") $(find figlan/java-test -name "*.java")
 
-    Desafio extra: "cara a piscar os olhos" com animação
+# Para Windows (note o ponto e vírgula ';' no classpath)
+# javac -d figlan\bin -cp "figlan\lib\antlr-4.13.1-complete.jar;figlan\lib\ST-4.3.4.jar" @sources.txt
+# (Onde sources.txt é um ficheiro com a lista de todos os .java a compilar)
+```
 
-⚙️ Proposta de Estrutura Técnica
+### Passo 3: Executar o Compilador (Figlan -> Java)
 
-    Figlan.g4: gramática ANTLR
+Usamos o nosso compilador para traduzir um ficheiro de exemplo.
 
-    SymbolTable.java: análise semântica
+```bash
+# Para Linux/macOS
+java -cp "figlan/bin:figlan/lib/antlr-4.13.1-complete.jar:figlan/lib/ST-4.3.4.jar" figlan.compiler.Main figlan/examples/example1.fl
 
-    FiglanCompiler.java: main + coordenação de fases
+# Para Windows
+# java -cp "figlan\bin;figlan\lib\antlr-4.13.1-complete.jar;figlan\lib\ST-4.3.4.jar" figlan.compiler.Main figlan\examples\example1.fl
+```
+Após a execução, um novo ficheiro, `FiglanProgram.java`, será criado na pasta `figlan/`.
 
-    templates/: ficheiros .stg do StringTemplate
+### Passo 4: Compilar o Programa Gerado
 
-    output/: código Java gerado a partir dos .fl
+Compilamos o `FiglanProgram.java` que o nosso compilador acabou de criar.
+
+```bash
+javac -d figlan/bin -cp figlan/bin figlan/FiglanProgram.java
+```
+
+### Passo 5: Executar o Programa Final
+
+Finalmente, executamos o programa e vemos o resultado gráfico.
+
+```bash
+java -cp figlan/bin generated.FiglanProgram
+```
+
+---
+
+### Limpeza
+
+Para limpar todos os ficheiros gerados e começar do zero, pode executar os seguintes comandos:
+
+```bash
+rm -rf figlan/bin/*
+rm -rf figlan/src/figlan/generated/*
+rm -f figlan/FiglanProgram.java
+```

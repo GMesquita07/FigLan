@@ -25,7 +25,7 @@ varInit : ID ('=' expression)? ;
 // ——— Atribuição (cobre 'a = 10', 'a += 1', e 'a = read "..."')
 assignStmt : ID (op=('=' | '+=') ) expression ;
 
-// ——— show / hide: para desenhar ou esconder figuras [cite: 9, 15, 16]
+// ——— show / hide: para desenhar ou esconder figuras
 showStmt : SHOW exprList ;
 hideStmt : HIDE ( ALL | exprList ) ;
 
@@ -102,7 +102,7 @@ PRINT   : 'print' ;
 PRINTLN : 'println' ;
 READ    : 'read' ;
 
-// Palavras-chave de Tipos [cite: 4, 6]
+// Palavras-chave de Tipos 
 INTEGER_KW : 'integer' ;
 REAL_KW    : 'real' ;
 TEXT_KW    : 'text' ;

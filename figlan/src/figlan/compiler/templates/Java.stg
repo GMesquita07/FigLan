@@ -1,0 +1,47 @@
+// Ficheiro: Java.stg
+// Grupo de templates para gerar código Java a partir de Figlan.
+
+program(imports, statements) ::= <<
+package generated;
+
+import figures.*;
+import java.util.Scanner;
+// <imports; separator="\n"> // Para imports adicionais, se necessário 
+
+public class FiglanProgram {
+    public static void main(String[] args) {
+        FigureBoard board = FigureBoard.init("Figlan Output", 800, 600);
+        Scanner scanner = new Scanner(System.in); 
+
+        <statements; separator="\n">
+    }
+}
+>>
+
+// Template para declaração de variáveis
+varDecl(type, name, value) ::= "<type> <name> = <value>;"
+
+// Template para uma atribuição simples 
+assign(var, op, expr) ::= "<var> <op> <expr>;"
+
+// Template para a instrução 'show'
+show(figureVar) ::= "board.draw(<figureVar>);"
+
+// Template para a instrução 'pause' 
+pause(ms) ::= "Utils.pause(<ms>);"
+
+// Template para a instrução 'print'
+print(args) ::= "System.out.print(<args>);"
+
+// Template para a instrução 'println'
+println(args) ::= "System.out.println(<args>);"
+
+// Template para a instrução 'for'
+forLoop(var, start, end, statements) ::= <<
+for (int <var> = <start>; <var> <= <end>; <var>++) {
+    <statements>
+}
+>>
+
+// Template para encapsular o resultado de uma expressão em modo TAC
+expr(preamble, result) ::= ""

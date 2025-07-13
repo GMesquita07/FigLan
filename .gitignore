@@ -1,14 +1,25 @@
+# Ficheiros e pastas de configuração de IDEs
 .vscode/
 .idea/
 
-*.jar
+# Artefactos de compilação e execução
+# Adicionado o prefixo 'figlan/' para corresponder à estrutura de pastas
+figlan/bin/
+figlan/FiglanProgram.java
+
+# Padrões globais que funcionam em qualquer pasta
 *.class
+*.jar
 *.log
 *.tmp
 
-src/figlan/generated/
-
+# Ficheiros gerados pelo ANTLR
+# O caminho correto a partir da raiz do repositório 'FigLan'
+figlan/src/figlan/generated/
 *.tokens
 *.interp
-
 .antlr/
+
+# Ficheiros de sistema operativo
+.DS_Store
+Thumbs.db
