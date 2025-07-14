@@ -1,0 +1,24 @@
+# line comment
+
+point p;
+line l1,l2;
+circle c1,c2;
+
+// Usar coordenadas maiores para tornar as figuras visíveis
+p = [100,100]; 
+l1 = new line(p, [250, 150]);
+
+p = [400, 300];
+// Usar um raio maior
+c1 = new circle(p, 80.0); 
+
+l2 = [50, 400] -- [700, 500]; 
+c2 = [600, 200] | 50; 
+
+println "A circle: ", c1; 
+show c1; 
+show p,l1,l2,c1,c2;
+pause 2000; // Aumentar a pausa para ver melhor
+hide c1;
+pause 2000; 
+hide all;

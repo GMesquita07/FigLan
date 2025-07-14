@@ -52,11 +52,11 @@ public class Main {
 
             // 7. FASE DE GERAÇÃO DE CÓDIGO (NOVO)
             System.out.println("Generating Java code...");
-            CodeGenerator generator = new CodeGenerator();
+            CodeGenerator generator = new CodeGenerator(analyser.getSymbolTable()); // <-- ALTERAÇÃO CRÍTICA
             ST generatedCode = generator.visit(tree);
 
             // 8. Escrever o código gerado num ficheiro .java
-            String outputFileName = "figlan/FiglanProgram.java";
+            String outputFileName = "figlan/src/figlan/generated/FiglanProgram.java";
             try (PrintWriter out = new PrintWriter(outputFileName)) {
                 out.println(generatedCode.render());
                 System.out.println("Code successfully generated to " + outputFileName);

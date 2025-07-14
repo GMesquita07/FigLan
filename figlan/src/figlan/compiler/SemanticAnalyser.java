@@ -3,6 +3,7 @@ package figlan.compiler;
 
 import figlan.generated.*;
 
+
 import java.util.List;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -26,6 +27,10 @@ public class SemanticAnalyser extends FiglanBaseVisitor<Symbol> {
 
     public int getErrorCount() {
         return errorCount;
+    }
+
+    public SymbolTable getSymbolTable() {
+        return this.st;
     }
 
     // --- Métodos para as Instruções (Statements) ---

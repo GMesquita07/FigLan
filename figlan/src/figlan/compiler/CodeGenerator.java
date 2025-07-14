@@ -4,6 +4,8 @@ package figlan.compiler;
 import figlan.generated.*;
 
 import org.stringtemplate.v4.*;
+
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -13,14 +15,15 @@ import java.util.stream.Collectors;
 public class CodeGenerator extends FiglanBaseVisitor<ST> {
 
     private final STGroup templates;
-    private final SymbolTable st = new SymbolTable();
+    private final SymbolTable st;
     private int tempVarCounter = 0;
 
     /**
      * Construtor que carrega o grupo de templates a partir do ficheiro .stg.
      */
-    public CodeGenerator() {
+    public CodeGenerator(SymbolTable st) { // <-- ALTERAÇÃO CRÍTICA
         this.templates = new STGroupFile("figlan/src/figlan/compiler/templates/Java.stg");
+        this.st = st; // Armazena a tabela de símbolos recebida
     }
 
     // --- Métodos Auxiliares ---
@@ -38,8 +41,16 @@ public class CodeGenerator extends FiglanBaseVisitor<ST> {
             case POINT -> "Point";
             case LINE -> "Line";
             case CIRCLE -> "Circle";
-            case FIGURE -> "Object"; // Ou uma classe Figure se tiver uma lista
+            case FIGURE -> "Figure"; 
             default -> "void";
+        };
+    }
+
+    private String getDefaultValue(FiglanType type) {
+        return switch (type) {
+            case INTEGER -> "0";
+            case REAL -> "0.0";
+            default -> "null"; // Correct for TEXT, POINT, LINE, CIRCLE, FIGURE
         };
     }
 
@@ -48,40 +59,44 @@ public class CodeGenerator extends FiglanBaseVisitor<ST> {
     @Override
     public ST visitProgram(FiglanParser.ProgramContext ctx) {
         ST programST = templates.getInstanceOf("program");
-        String statements = ctx.statement().stream()
-                // ALTERAÇÃO: Visitar o primeiro filho da instrução (ex: varDecl), 
-                // não a própria 'statement'.
+        
+        // CORREÇÃO: Mude de String para List<ST>
+        List<ST> statements = ctx.statement().stream()
                 .map(statementContext -> visit(statementContext.getChild(0)))
-                .map(ST::render)
-                .collect(Collectors.joining("\n"));
+                // REMOVA o .map(ST::render) e mude o collector
+                .collect(Collectors.toList()); 
+                
         programST.add("statements", statements);
         return programST;
     }
 
     @Override
     public ST visitVarDecl(FiglanParser.VarDeclContext ctx) {
-        FiglanType type = new SemanticAnalyser().visit(ctx.type()).type(); // Re-avalia o tipo
+        // 1. Obter o tipo da primeira variável (a sua lógica está correta).
+        String firstVarNameInDecl = ctx.varInit(0).ID().getText();
+        Symbol symbol = st.get(firstVarNameInDecl);
+        FiglanType type = symbol.type();
         String javaType = mapType(type);
-        StringBuilder declarations = new StringBuilder();
+        
+        // 2. CORREÇÃO: Usar um Stream para gerar e juntar as declarações.
+        String declarations = ctx.varInit().stream()
+            .map(varCtx -> {
+                String varName = varCtx.ID().getText();
+                ST decl = templates.getInstanceOf("varDecl");
+                decl.add("type", javaType);
+                decl.add("name", varName);
 
-        for (FiglanParser.VarInitContext varCtx : ctx.varInit()) {
-            String varName = varCtx.ID().getText();
-            st.put(varName, new Symbol(type)); // Adiciona à tabela de símbolos do gerador
+                if (varCtx.expression() != null) {
+                    decl.add("value", visit(varCtx.expression()).render());
+                } else {
+                    decl.add("value", getDefaultValue(type));
+                }
+                return decl.render();
+            })
+            .collect(Collectors.joining("\n"));
 
-            ST decl = templates.getInstanceOf("varDecl");
-            decl.add("type", javaType);
-            decl.add("name", varName);
-
-            if (varCtx.expression() != null) {
-                ST expr = visit(varCtx.expression());
-                decl.add("value", expr.render());
-            } else {
-                // Inicialização padrão em Java (ex: 0 para int, null para objetos)
-                decl.add("value", "null"); // ou 0, 0.0, etc. conforme o tipo
-            }
-            declarations.append(decl.render()).append("\n");
-        }
-        return new ST(declarations.toString());
+        // 3. Retornar um ST que contém a string final.
+        return new ST(declarations);
     }
     
     @Override
@@ -119,33 +134,46 @@ public class CodeGenerator extends FiglanBaseVisitor<ST> {
 
     @Override
     public ST visitShowStmt(FiglanParser.ShowStmtContext ctx) {
-        String figures = ctx.exprList().expression().stream()
-            .map(e -> "board.draw(" + visit(e).render() + ");")
+        // Gera uma sequência de chamadas "board.draw(...);" usando o template 'show'
+        String figuresCode = ctx.exprList().expression().stream()
+            .map(expr -> {
+                ST showST = templates.getInstanceOf("show");
+                showST.add("figureVar", visit(expr).render());
+                return showST.render();
+            })
             .collect(Collectors.joining("\n"));
-        return new ST(figures);
+        return new ST(figuresCode);
     }
     
     @Override
     public ST visitHideStmt(FiglanParser.HideStmtContext ctx) {
         if (ctx.ALL() != null) {
-            return new ST("board.eraseAll();"); // Supondo que board tem este método
+            // Usa um template para "hideAll" (assumindo que adicionou ao Java.stg)
+            return templates.getInstanceOf("hideAll"); 
         }
-        String figures = ctx.exprList().expression().stream()
-            .map(e -> "board.erase(" + visit(e).render() + ");")
+
+        // Gera uma sequência de chamadas "board.erase(...);" usando o template 'hide'
+        String figuresCode = ctx.exprList().expression().stream()
+            .map(expr -> {
+                ST hideST = templates.getInstanceOf("hide");
+                hideST.add("figureVar", visit(expr).render());
+                return hideST.render();
+            })
             .collect(Collectors.joining("\n"));
-        return new ST(figures);
+        return new ST(figuresCode);
     }
 
     @Override
     public ST visitForStmt(FiglanParser.ForStmtContext ctx) {
         st.enterScope();
         String varName = ctx.ID().getText();
-        st.put(varName, new Symbol(FiglanType.INTEGER)); // Variável do ciclo é sempre int
+        st.put(varName, new Symbol(FiglanType.INTEGER));
 
-        String body = ctx.statement().stream()
+        // CORREÇÃO: Mude de String para List<ST>
+        List<ST> body = ctx.statement().stream()
             .map(this::visit)
-            .map(ST::render)
-            .collect(Collectors.joining("\n"));
+            // REMOVA o .map(ST::render) e mude o collector
+            .collect(Collectors.toList());
         
         st.exitScope();
 
@@ -153,7 +181,7 @@ public class CodeGenerator extends FiglanBaseVisitor<ST> {
         forST.add("var", varName);
         forST.add("start", visit(ctx.expression(0)).render());
         forST.add("end", visit(ctx.expression(1)).render());
-        forST.add("statements", body);
+        forST.add("statements", body); // Agora 'body' é uma lista, o que é correto
         return forST;
     }
 
@@ -176,36 +204,43 @@ public class CodeGenerator extends FiglanBaseVisitor<ST> {
 
     @Override
     public ST visitAddSub(FiglanParser.AddSubContext ctx) {
-        ST left = visit(ctx.expression(0));
-        ST right = visit(ctx.expression(1));
-        return new ST(left.render() + " " + ctx.op.getText() + " " + right.render());
+        ST st = templates.getInstanceOf("binaryOp");
+        st.add("left", visit(ctx.expression(0)).render());
+        st.add("op", ctx.op.getText());
+        st.add("right", visit(ctx.expression(1)).render());
+        return st;
     }
 
 
     @Override
     public ST visitMulDivMod(FiglanParser.MulDivModContext ctx) {
-        ST left = visit(ctx.expression(0));
-        ST right = visit(ctx.expression(1));
-        
         String op = ctx.op.getText();
-        
-        // VERIFICAÇÃO: Se o operador for a divisão inteira de Figlan ('//'),
-        // traduz para o operador de divisão de Java ('/').
-        // Como a análise semântica já garantiu que os operandos são inteiros,
-        // o resultado em Java será uma divisão inteira.
         if (op.equals("//")) {
             op = "/";
         }
-        
-        return new ST(left.render() + " " + op + " " + right.render());
+
+        ST st = templates.getInstanceOf("binaryOp");
+        st.add("left", visit(ctx.expression(0)).render());
+        st.add("op", op);
+        st.add("right", visit(ctx.expression(1)).render());
+        return st;
     }
+
+// Ficheiro: CodeGenerator.java
 
     @Override
     public ST visitNewObj(FiglanParser.NewObjContext ctx) {
+        // --- LÓGICA CORRIGIDA ---
         FiglanParser.NewExprContext newCtx = ctx.newExpr();
-        FiglanType type = new SemanticAnalyser().visit(newCtx.type()).type();
-        String javaType = mapType(type);
+        
+        // 1. Obter o nome do tipo diretamente da árvore (ex: "point", "line").
+        String figlanTypeName = newCtx.type().getText();
 
+        // 2. Converter para o nome da classe Java (ex: "Point", "Line").
+        // A forma mais simples é capitalizar a primeira letra.
+        String javaType = figlanTypeName.substring(0, 1).toUpperCase() + figlanTypeName.substring(1);
+
+        // 3. Processar os argumentos da mesma forma que antes.
         String args = newCtx.expression().stream()
             .map(this::visit)
             .map(ST::render)
@@ -214,16 +249,23 @@ public class CodeGenerator extends FiglanBaseVisitor<ST> {
         return new ST("new " + javaType + "(" + args + ")");
     }
 
+    // Ficheiro: CodeGenerator.java
+
     @Override
     public ST visitTypeConversion(FiglanParser.TypeConversionContext ctx) {
-        FiglanType targetType = new SemanticAnalyser().visit(ctx.type()).type();
+        // --- LÓGICA CORRIGIDA ---
+        // 1. Obter o nome do tipo alvo diretamente da árvore (ex: "integer", "text").
+        String targetTypeName = ctx.type().getText();
+        
+        // 2. Visitar a expressão a ser convertida.
         ST expr = visit(ctx.expression());
         
-        return switch (targetType) {
-            case INTEGER -> new ST("Integer.parseInt(" + expr.render() + ")");
-            case REAL -> new ST("Double.parseDouble(" + expr.render() + ")");
-            case TEXT -> new ST("String.valueOf(" + expr.render() + ")");
-            default -> expr;
+        // 3. Gerar o código de conversão com base no nome do tipo.
+        return switch (targetTypeName) {
+            case "integer" -> new ST("Integer.parseInt(" + expr.render() + ")");
+            case "real"    -> new ST("Double.parseDouble(" + expr.render() + ")");
+            case "text"    -> new ST("String.valueOf(" + expr.render() + ")");
+            default        -> expr; // Se não for uma conversão conhecida, retorna a expressão original.
         };
     }
 
