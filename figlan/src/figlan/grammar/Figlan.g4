@@ -125,7 +125,6 @@ REAL    : [0-9]+ '.' [0-9]+ ;
 STRING  : '"' ( ~["\\] | '\\' . )* '"' ;
 
 // ——— Comentários (a serem ignorados)
-COMMENT_SLASH : '//' ~[\r\n]* -> skip ;
 COMMENT_HASH  : '#'  ~[\r\n]* -> skip ;
 COMMENT_BLOCK : '##' .*? '##' -> skip ;
 

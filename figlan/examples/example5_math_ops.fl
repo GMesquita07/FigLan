@@ -1,0 +1,30 @@
+# Ficheiro: example5_math_ops.fl
+# Objetivo: Testar os operadores de divisão inteira e resto,
+# e a instrução 'print'.
+
+println "--- Teste de Operadores Aritméticos ---";
+
+integer a = 25;
+integer b = 7;
+integer quociente;
+integer resto;
+
+quociente = a // b;  # Divisão inteira, o resultado esperado é 3
+resto = a % b;      # Resto da divisão, o resultado esperado é 4
+
+# Testar a instrução 'print' para construir uma linha
+print "Dividindo ", a, " por ", b, " -> ";
+print "Quociente: ", quociente;
+print ", Resto: ", resto;
+println ""; # Apenas para mudar de linha no final
+
+# Usar os resultados para desenhar algo
+# Uma linha do ponto (0,0) até (quociente, resto)
+line l1 = [0,0] -- [quociente, resto];
+
+# Um círculo centrado na origem com raio igual ao resto
+circle c1 = [0,0] | resto;
+
+show l1, c1;
+
+println "Figura desenhada com base nos resultados matemáticos.";

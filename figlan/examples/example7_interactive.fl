@@ -1,0 +1,31 @@
+# Ficheiro: example7_interactive.fl
+# Objetivo: Testar a interatividade (leitura de dados) e a manipulação
+# de uma coleção de figuras.
+
+println "--- Bem-vindo ao Gerador de Estrelas! ---";
+
+integer num_pontas = integer(read "Quantas pontas para a estrela (e.g., 5)? ");
+real raio = real(read "Qual o raio do círculo central (e.g., 2.0)? ");
+
+# Uma coleção para guardar todas as linhas da nossa "estrela"
+figure estrela;
+point centro = [15, 15];
+
+# Desenha um círculo no centro como referência
+estrela += new circle(centro, raio);
+
+# Desenha as linhas (pontas da estrela)
+for integer i = 1 to num_pontas do
+  # Cria uma linha do centro para um ponto calculado
+  # A "fórmula" é apenas para criar um padrão visual
+  estrela += new line(centro, [15 + i*raio, 15 + i*raio/2]);
+  estrela += new line(centro, [15 - i*raio, 15 - i*raio/2]);
+  estrela += new line(centro, [15 + i*raio, 15 - i*raio]);
+end
+
+println "A desenhar a sua estrela com ", num_pontas, " pontas!";
+show estrela;
+
+pause 5000;
+println "Fim da demonstração.";
+hide all;
