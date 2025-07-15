@@ -9,7 +9,6 @@ figlan/FiglanProgram.java
 
 # Padrões globais que funcionam em qualquer pasta
 *.class
-*.jar
 *.log
 *.tmp
 
