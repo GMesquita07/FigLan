@@ -294,22 +294,22 @@ public class SemanticAnalyser extends FiglanBaseVisitor<Symbol> {
         Symbol right = visit(ctx.expression(1));
         String op = ctx.op.getText();
 
-        if (op.equals("%") || op.equals("//")) { // Resto e Divisão Inteira
+        if (op.equals("%")) {
             if (left.type() == FiglanType.INTEGER && right.type() == FiglanType.INTEGER) {
                 return new Symbol(FiglanType.INTEGER);
             } else {
-                error(ctx, "Operator '" + op + "' requires integer operands.");
+                error(ctx, "Operator '%' requires integer operands.");
                 return new Symbol(FiglanType.UNDEFINED);
             }
-        } else { // Multiplicação e Divisão Real
+        } else if (op.equals("//")) {
             if (isNumeric(left.type()) && isNumeric(right.type())) {
-                FiglanType resultType = (left.type() == FiglanType.REAL || right.type() == FiglanType.REAL) ? FiglanType.REAL : FiglanType.INTEGER;
-                return new Symbol(resultType);
+                return new Symbol(FiglanType.INTEGER); // divisão inteira retorna int
             } else {
-                error(ctx, "Operator '" + op + "' requires numeric operands.");
+                error(ctx, "Operator '//' requires numeric operands.");
                 return new Symbol(FiglanType.UNDEFINED);
             }
         }
+        
     }
     
     @Override

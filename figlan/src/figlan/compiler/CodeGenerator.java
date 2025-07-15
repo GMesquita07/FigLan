@@ -7,6 +7,7 @@ import org.stringtemplate.v4.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import figlan.runtime.MathUtils;
 
 /**
  * Visita a árvore sintática após a validação semântica e gera código Java
@@ -215,16 +216,23 @@ public class CodeGenerator extends FiglanBaseVisitor<ST> {
     @Override
     public ST visitMulDivMod(FiglanParser.MulDivModContext ctx) {
         String op = ctx.op.getText();
-        if (op.equals("//")) {
-            op = "/";
-        }
+        ST left = visit(ctx.expression(0));
+        ST right = visit(ctx.expression(1));
 
-        ST st = templates.getInstanceOf("binaryOp");
-        st.add("left", visit(ctx.expression(0)).render());
-        st.add("op", op);
-        st.add("right", visit(ctx.expression(1)).render());
-        return st;
+        if (op.equals("//")) {
+            ST st = templates.getInstanceOf("divInt");
+            st.add("a", left.render());
+            st.add("b", right.render());
+            return st;
+        } else {
+            ST st = templates.getInstanceOf("binaryOp");
+            st.add("left", left.render());
+            st.add("op", op);
+            st.add("right", right.render());
+            return st;
+        }
     }
+
 
 // Ficheiro: CodeGenerator.java
 

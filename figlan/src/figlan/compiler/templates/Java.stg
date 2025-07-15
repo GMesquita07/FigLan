@@ -51,3 +51,5 @@ for (int <var> = <start>; <var> <= <end>; <var>++) {
 expr(preamble, result) ::= ""
 
 binaryOp(left, op, right) ::= "<left> <op> <right>"
+
+divInt(a, b) ::= "MathUtils.idiv(<a>, <b>)"
