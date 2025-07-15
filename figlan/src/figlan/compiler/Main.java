@@ -4,6 +4,7 @@ package figlan.compiler;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import org.stringtemplate.v4.ST;
+import figlan.compiler.utils.PathConfig;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -56,7 +57,7 @@ public class Main {
             ST generatedCode = generator.visit(tree);
 
             // 8. Escrever o código gerado num ficheiro .java
-            String outputFileName = "figlan/src/figlan/generated/FiglanProgram.java";
+            String outputFileName = PathConfig.getGeneratedFilePath("FiglanProgram.java");
             try (PrintWriter out = new PrintWriter(outputFileName)) {
                 out.println(generatedCode.render());
                 System.out.println("Code successfully generated to " + outputFileName);

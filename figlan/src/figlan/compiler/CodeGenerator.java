@@ -2,6 +2,7 @@
 package figlan.compiler;
 
 import figlan.generated.*;
+import figlan.compiler.utils.PathConfig;
 
 import org.stringtemplate.v4.*;
 
@@ -22,7 +23,7 @@ public class CodeGenerator extends FiglanBaseVisitor<ST> {
      * Construtor que carrega o grupo de templates a partir do ficheiro .stg.
      */
     public CodeGenerator(SymbolTable st) { // <-- ALTERAÇÃO CRÍTICA
-        this.templates = new STGroupFile("figlan/src/figlan/compiler/templates/Java.stg");
+        this.templates = new STGroupFile(PathConfig.getTemplateFilePath("Java.stg"));
         this.st = st; // Armazena a tabela de símbolos recebida
     }
 
@@ -60,10 +61,9 @@ public class CodeGenerator extends FiglanBaseVisitor<ST> {
     public ST visitProgram(FiglanParser.ProgramContext ctx) {
         ST programST = templates.getInstanceOf("program");
         
-        // CORREÇÃO: Mude de String para List<ST>
+        // CORREÇÃO: Mapear diretamente para o visit, que agora é seguro.
         List<ST> statements = ctx.statement().stream()
-                .map(statementContext -> visit(statementContext.getChild(0)))
-                // REMOVA o .map(ST::render) e mude o collector
+                .map(this::visit) // Simplificado!
                 .collect(Collectors.toList()); 
                 
         programST.add("statements", statements);
@@ -97,6 +97,17 @@ public class CodeGenerator extends FiglanBaseVisitor<ST> {
 
         // 3. Retornar um ST que contém a string final.
         return new ST(declarations);
+    }
+
+    @Override
+    public ST visitStatement(FiglanParser.StatementContext ctx) {
+        // A regra 'statement' tem sempre um filho que é a instrução real
+        // (seja um forStmt, um showStmt, etc.).
+        // Ao visitar apenas o primeiro filho, ignoramos o ';' terminal.
+        if (ctx.getChild(0) != null) {
+            return visit(ctx.getChild(0));
+        }
+        return null; // Não deve acontecer com uma gramática válida
     }
     
     @Override
@@ -165,23 +176,33 @@ public class CodeGenerator extends FiglanBaseVisitor<ST> {
 
     @Override
     public ST visitForStmt(FiglanParser.ForStmtContext ctx) {
-        st.enterScope();
         String varName = ctx.ID().getText();
-        st.put(varName, new Symbol(FiglanType.INTEGER));
-
-        // CORREÇÃO: Mude de String para List<ST>
+        
+        // Processa o corpo do loop (a sua lógica atual está correta)
+        st.enterScope();
+        st.put(varName, new Symbol(FiglanType.INTEGER)); // Garante que a var existe dentro do escopo do loop
         List<ST> body = ctx.statement().stream()
             .map(this::visit)
-            // REMOVA o .map(ST::render) e mude o collector
             .collect(Collectors.toList());
-        
         st.exitScope();
+        
+        // --- LÓGICA DE DECISÃO ---
+        ST forST;
+        if (ctx.type() != null) {
+            // Caso 1: O 'for' declara a variável (ex: for integer i = ...)
+            forST = templates.getInstanceOf("forLoopWithDecl");
+            forST.add("type", mapType(FiglanType.INTEGER)); // O tipo é sempre int
+        } else {
+            // Caso 2: O 'for' reutiliza uma variável existente (ex: for i = ...)
+            forST = templates.getInstanceOf("forLoop");
+        }
 
-        ST forST = templates.getInstanceOf("forLoop");
+        // Adiciona os atributos comuns a ambos os templates
         forST.add("var", varName);
         forST.add("start", visit(ctx.expression(0)).render());
         forST.add("end", visit(ctx.expression(1)).render());
-        forST.add("statements", body); // Agora 'body' é uma lista, o que é correto
+        forST.add("statements", body);
+        
         return forST;
     }
 

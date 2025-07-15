@@ -6,11 +6,12 @@ package figlan.generated;
 
 import figures.*;
 import java.util.Scanner;
-// <imports; separator="\n"> // Para imports adicionais, se necessário 
 
 public class FiglanProgram {
+    // Declaração estática e final para garantir inicialização única
+    private static final FigureBoard board = FigureBoard.init("Figlan Output", 800, 600);
+    
     public static void main(String[] args) {
-        FigureBoard board = FigureBoard.init("Figlan Output", 800, 600);
         Scanner scanner = new Scanner(System.in); 
 
         <statements; separator="\n">
@@ -26,9 +27,7 @@ assign(var, op, expr) ::= "<var> <op> <expr>;"
 
 // Template para a instrução 'show'
 show(figureVar) ::= "board.draw(<figureVar>);"
-
 hide(figureVar) ::= "board.erase(<figureVar>);"
-
 hideAll() ::= "board.eraseAll();"
 
 // Template para a instrução 'pause' 
@@ -42,12 +41,18 @@ println(args) ::= "System.out.println(<args>);"
 
 // Template para a instrução 'for'
 forLoop(var, start, end, statements) ::= <<
-for (int <var> = <start>; <var> <= <end>; <var>++) {
-    <statements>
+for (<var> = <start>; <var> \<= <end>; <var>++) {
+    <statements; separator="\n">
+}
+>>
+
+forLoopWithDecl(type, var, start, end, statements) ::= <<
+for (<type> <var> = <start>; <var> \<= <end>; <var>++) {
+    <statements; separator="\n">
 }
 >>
 
 // Template para encapsular o resultado de uma expressão em modo TAC
-expr(preamble, result) ::= ""
+// expr(preamble, result) ::= ""
 
-binaryOp(left, op, right) ::= "<left> <op> <right>"
+binaryOp(left, op, right) ::= "(<left> <op> <right>)"
