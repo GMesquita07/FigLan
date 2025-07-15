@@ -1,0 +1,20 @@
+# Cabeça
+circle head = new circle(new point(200, 200), 100)
+
+# Olhos (dois círculos pequenos)
+circle olhoE = new circle(new point(170, 180), 10)
+circle olhoD = new circle(new point(230, 180), 10)
+
+# Boca (linha horizontal)
+line boca = new line(new point(170, 230), new point(230, 230))
+
+# Mostrar todos os elementos da cara
+show head, olhoE, olhoD, boca
+
+# Repetir 5 piscadelas
+for integer i = 1 to 5 do
+    pause 500          # Espera antes de piscar
+    hide olhoE, olhoD  # Fecha os olhos
+    pause 200          # Olhos fechados
+    show olhoE, olhoD  # Abre os olhos
+end
