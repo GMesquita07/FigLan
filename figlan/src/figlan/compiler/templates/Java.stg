@@ -6,14 +6,22 @@ package figlan.generated;
 
 import figures.*;
 import java.util.Scanner;
+import java.util.List;
+import java.util.ArrayList;
 
 public class FiglanProgram {
-    // Declaração estática e final para garantir inicialização única
     private static final FigureBoard board = FigureBoard.init("Figlan Output", 800, 600);
-    
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in); 
+    // CORREÇÃO 1: Mover o scanner para um campo estático.
+    private static final Scanner scanner = new Scanner(System.in);
 
+    // CORREÇÃO 2: Adicionar a função auxiliar (helper).
+    public static String readHelper(String prompt) {
+        System.out.print(prompt);
+        return scanner.nextLine();
+    }
+
+    public static void main(String[] args) {
+        // O scanner já não é declarado aqui.
         <statements; separator="\n">
     }
 }
@@ -29,6 +37,18 @@ assign(var, op, expr) ::= "<var> <op> <expr>;"
 show(figureVar) ::= "board.draw(<figureVar>);"
 hide(figureVar) ::= "board.erase(<figureVar>);"
 hideAll() ::= "board.eraseAll();"
+
+showList(listVar) ::= <<
+for (Figure fig : <listVar>) {
+    board.draw(fig);
+}
+>>
+
+hideList(listVar) ::= <<
+for (Figure fig : <listVar>) {
+    board.erase(fig);
+}
+>>
 
 // Template para a instrução 'pause' 
 pause(ms) ::= "Utils.pause(<ms>);"
@@ -56,3 +76,5 @@ for (<type> <var> = <start>; <var> \<= <end>; <var>++) {
 // expr(preamble, result) ::= ""
 
 binaryOp(left, op, right) ::= "(<left> <op> <right>)"
+
+addToList(listVar, element) ::= "<listVar>.add(<element>);"

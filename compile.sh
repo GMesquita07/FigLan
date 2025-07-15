@@ -11,6 +11,13 @@ NC='\033[0m' # No Color
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT_DIR"
 
+# --- CORREÇÃO: Verificar o argumento de entrada ANTES de fazer qualquer coisa ---
+if [ -z "$1" ]; then
+    echo -e "${RED}Erro: Nenhum ficheiro de entrada especificado.${NC}"
+    echo -e "Uso correto: ${GREEN}./compile.sh <caminho/para/o/ficheiro.fl>${NC}"
+    exit 1
+fi
+
 echo -e "${BLUE}Compilando o projeto FigLan...${NC}"
 
 # Cria os diretórios necessários
@@ -37,11 +44,6 @@ fi
 echo -e "${GREEN}Código-fonte compilado com sucesso!${NC}"
 
 # Passo 3: Compilar um programa Figlan
-if [ -z "$1" ]; then
-    echo -e "${BLUE}Nenhum arquivo de entrada especificado. Use: ./compile.sh <arquivo.fl>${NC}"
-    exit 0
-fi
-
 echo -e "${BLUE}Passo 3: Compilando o programa Figlan: $1${NC}"
 java -cp "figlan/bin:figlan/lib/antlr-4.13.1-complete.jar:figlan/lib/ST-4.3.4.jar" figlan.compiler.Main "$1"
 if [ $? -ne 0 ]; then
@@ -60,4 +62,4 @@ fi
 echo -e "${GREEN}Programa Java gerado compilado com sucesso!${NC}"
 
 echo -e "${BLUE}Compilação concluída! Execute o programa com:${NC}"
-echo -e "${GREEN}java -cp \"figlan/bin:figlan/java-test\" figlan.generated.FiglanProgram${NC}"
+echo -e "${GREEN}./run.sh${NC}"

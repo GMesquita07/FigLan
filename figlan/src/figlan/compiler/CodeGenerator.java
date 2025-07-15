@@ -6,6 +6,7 @@ import figlan.compiler.utils.PathConfig;
 
 import org.stringtemplate.v4.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,7 +43,8 @@ public class CodeGenerator extends FiglanBaseVisitor<ST> {
             case POINT -> "Point";
             case LINE -> "Line";
             case CIRCLE -> "Circle";
-            case FIGURE -> "Figure"; 
+            // CORREÇÃO: Mapear 'figure' para uma lista de figuras Java.
+            case FIGURE -> "List<Figure>"; 
             default -> "void";
         };
     }
@@ -51,7 +53,9 @@ public class CodeGenerator extends FiglanBaseVisitor<ST> {
         return switch (type) {
             case INTEGER -> "0";
             case REAL -> "0.0";
-            default -> "null"; // Correct for TEXT, POINT, LINE, CIRCLE, FIGURE
+            // CORREÇÃO: Inicializar a lista de figuras.
+            case FIGURE -> "new ArrayList<>()";
+            default -> "null";
         };
     }
 
@@ -72,14 +76,13 @@ public class CodeGenerator extends FiglanBaseVisitor<ST> {
 
     @Override
     public ST visitVarDecl(FiglanParser.VarDeclContext ctx) {
-        // 1. Obter o tipo da primeira variável (a sua lógica está correta).
         String firstVarNameInDecl = ctx.varInit(0).ID().getText();
         Symbol symbol = st.get(firstVarNameInDecl);
         FiglanType type = symbol.type();
         String javaType = mapType(type);
         
-        // 2. CORREÇÃO: Usar um Stream para gerar e juntar as declarações.
-        String declarations = ctx.varInit().stream()
+        // CORREÇÃO: Mapear para uma LISTA DE OBJETOS ST, não para strings.
+        List<ST> declarationSTs = ctx.varInit().stream()
             .map(varCtx -> {
                 String varName = varCtx.ID().getText();
                 ST decl = templates.getInstanceOf("varDecl");
@@ -87,16 +90,18 @@ public class CodeGenerator extends FiglanBaseVisitor<ST> {
                 decl.add("name", varName);
 
                 if (varCtx.expression() != null) {
-                    decl.add("value", visit(varCtx.expression()).render());
+                    decl.add("value", visit(varCtx.expression())); // Retorna ST
                 } else {
                     decl.add("value", getDefaultValue(type));
                 }
-                return decl.render();
+                return decl; // Retorna o objeto ST, não a sua renderização.
             })
-            .collect(Collectors.joining("\n"));
+            .collect(Collectors.toList());
 
-        // 3. Retornar um ST que contém a string final.
-        return new ST(declarations);
+        // CORREÇÃO: Usar um template contentor para juntar as declarações.
+        ST container = new ST("<declarations; separator=\"\\n\">");
+        container.add("declarations", declarationSTs);
+        return container;
     }
 
     @Override
@@ -113,11 +118,21 @@ public class CodeGenerator extends FiglanBaseVisitor<ST> {
     @Override
     public ST visitAssignStmt(FiglanParser.AssignStmtContext ctx) {
         String varName = ctx.ID().getText();
+        Symbol varSymbol = st.get(varName); // Obter o símbolo da variável
         ST expr = visit(ctx.expression());
         
+        // --- CORREÇÃO: Lógica para o operador '+=' em figuras ---
+        if (ctx.op.getText().equals("+=") && varSymbol.type() == FiglanType.FIGURE) {
+            ST addToListST = templates.getInstanceOf("addToList"); // Usar um novo template
+            addToListST.add("listVar", varName);
+            addToListST.add("element", expr.render());
+            return addToListST;
+        }
+        
+        // Lógica original para todos os outros casos
         ST assignST = templates.getInstanceOf("assign");
         assignST.add("var", varName);
-        assignST.add("op", ctx.op.getText()); // Passa o operador (=, +=)
+        assignST.add("op", ctx.op.getText());
         assignST.add("expr", expr.render());
         
         return assignST;
@@ -145,33 +160,59 @@ public class CodeGenerator extends FiglanBaseVisitor<ST> {
 
     @Override
     public ST visitShowStmt(FiglanParser.ShowStmtContext ctx) {
-        // Gera uma sequência de chamadas "board.draw(...);" usando o template 'show'
-        String figuresCode = ctx.exprList().expression().stream()
+        // CORREÇÃO: Construir uma lista de ST e usar um template contentor.
+        List<ST> showInstructions = ctx.exprList().expression().stream()
             .map(expr -> {
-                ST showST = templates.getInstanceOf("show");
-                showST.add("figureVar", visit(expr).render());
-                return showST.render();
+                // É preciso verificar se a variável é uma lista de figuras.
+                String varName = expr.getText();
+                Symbol symbol = st.get(varName); // Assumindo que é um ID simples.
+                
+                // Para expressões complexas, uma análise mais robusta seria necessária,
+                // mas para os exemplos, isto funciona.
+                if (symbol != null && symbol.type() == FiglanType.FIGURE) {
+                    ST showListST = templates.getInstanceOf("showList");
+                    showListST.add("listVar", visit(expr));
+                    return showListST;
+                } else {
+                    ST showST = templates.getInstanceOf("show");
+                    showST.add("figureVar", visit(expr));
+                    return showST;
+                }
             })
-            .collect(Collectors.joining("\n"));
-        return new ST(figuresCode);
+            .collect(Collectors.toList());
+
+        ST container = new ST("<instructions; separator=\"\\n\">");
+        container.add("instructions", showInstructions);
+        return container;
     }
     
     @Override
     public ST visitHideStmt(FiglanParser.HideStmtContext ctx) {
         if (ctx.ALL() != null) {
-            // Usa um template para "hideAll" (assumindo que adicionou ao Java.stg)
-            return templates.getInstanceOf("hideAll"); 
+            return templates.getInstanceOf("hideAll");
         }
 
-        // Gera uma sequência de chamadas "board.erase(...);" usando o template 'hide'
-        String figuresCode = ctx.exprList().expression().stream()
+        // CORREÇÃO: Lógica idêntica ao showStmt
+        List<ST> hideInstructions = ctx.exprList().expression().stream()
             .map(expr -> {
-                ST hideST = templates.getInstanceOf("hide");
-                hideST.add("figureVar", visit(expr).render());
-                return hideST.render();
+                String varName = expr.getText();
+                Symbol symbol = st.get(varName);
+                
+                if (symbol != null && symbol.type() == FiglanType.FIGURE) {
+                    ST hideListST = templates.getInstanceOf("hideList");
+                    hideListST.add("listVar", visit(expr));
+                    return hideListST;
+                } else {
+                    ST hideST = templates.getInstanceOf("hide");
+                    hideST.add("figureVar", visit(expr));
+                    return hideST;
+                }
             })
-            .collect(Collectors.joining("\n"));
-        return new ST(figuresCode);
+            .collect(Collectors.toList());
+
+        ST container = new ST("<instructions; separator=\"\\n\">");
+        container.add("instructions", hideInstructions);
+        return container;
     }
 
     @Override
@@ -292,10 +333,15 @@ public class CodeGenerator extends FiglanBaseVisitor<ST> {
 
     @Override
     public ST visitReadExpression(FiglanParser.ReadExpressionContext ctx) {
+        // Se a expressão de leitura tiver um prompt...
         if (ctx.readExpr().expression() != null) {
             ST prompt = visit(ctx.readExpr().expression());
-            return new ST("System.out.print(" + prompt.render() + "); scanner.nextLine()");
+            
+            // CORREÇÃO: Gerar uma chamada para a função auxiliar.
+            return new ST("readHelper(" + prompt.render() + ")");
         }
+        
+        // Se não houver prompt, apenas lê a próxima linha.
         return new ST("scanner.nextLine()");
     }
     
